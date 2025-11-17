@@ -1,0 +1,22 @@
+# Dependências do Automation Framework
+
+# Web Automation
+selenium>=4.10.0
+webdriver-manager>=4.0.0
+
+# Desktop Automation
+pyautogui>=0.9.53
+pywinauto>=0.6.8
+
+# Console/CLI
+# (stdlib only)
+
+# Data & Utilities
+python-dotenv>=1.0.0
+
+# Testing (opcional)
+pytest>=7.4.0
+pytest-cov>=4.1.0
+
+# Logging & Monitoring (opcional)
+coloredlogs>=15.0.0
