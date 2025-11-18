@@ -2,6 +2,13 @@
 Exemplo 4: Uso de Utilities - Wait, Retry, Credenciais, Dados
 """
 
+import sys
+from pathlib import Path
+
+# Garantir que a raiz do projeto esteja no sys.path para permitir execução
+# a partir da pasta `automation_framework/` ou de qualquer outra
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from automation_framework.utils.wait import Wait, Retry, wait_for, retry
 from automation_framework.utils.credentials import CredentialManager
 from automation_framework.utils.data import DataHelper

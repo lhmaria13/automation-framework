@@ -73,7 +73,22 @@ def main():
         
         # Digitar caminho e nome do arquivo no diálogo "Salvar como"
         import subprocess
-        file_path = r"C:\Users\lhmaria1\OneDrive - Stefanini\Desktop\Automacao_Framework.txt"
+        import os
+        
+        # Usar variáveis de ambiente para tornar o caminho portável
+        username = os.environ.get('USERNAME', 'Usuario')
+        userprofile = os.environ.get('USERPROFILE', os.path.expanduser('~'))
+        
+        # Opção 1: Usar Desktop
+        file_path = os.path.join(userprofile, 'Desktop', 'Automacao_Framework.txt')
+        
+        # Opção 2: Usar Documents (descomente se preferir)
+        # file_path = os.path.join(userprofile, 'Documents', 'Automacao_Framework.txt')
+        
+        # Opção 3: Usar pasta temporária (descomente se preferir)
+        # import tempfile
+        # temp_dir = tempfile.gettempdir()
+        # file_path = os.path.join(temp_dir, 'Automacao_Framework.txt')
         subprocess.run(['powershell', '-Command', f'Set-Clipboard -Value "{file_path}"'], check=True)
         time.sleep(0.2)
         keyboard.hot_key('ctrl', 'a')  # Selecionar tudo no campo

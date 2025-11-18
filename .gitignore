@@ -74,7 +74,6 @@ dmypy.json
 
 # Arquivos de contexto/documentação temporária
 contexto.md
-LEIA-ME-PRIMEIRO.txt
 _temp/
 _backup/
 
