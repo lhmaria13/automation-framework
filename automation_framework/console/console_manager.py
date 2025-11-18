@@ -53,11 +53,14 @@ class ConsoleProcess:
                 capture_output=capture_output,
                 timeout=timeout,
                 text=True,
-                encoding=self.config.encoding
+                encoding=self.config.encoding,
+                errors=getattr(self.config, 'encoding_errors', 'replace')
             )
 
-            stdout = result.stdout.strip()
-            stderr = result.stderr.strip()
+            # result.stdout / result.stderr podem ser None em alguns ambientes;
+            # normalizar para string vazia antes de usar .strip()
+            stdout = (result.stdout or "").strip()
+            stderr = (result.stderr or "").strip()
 
             if capture_output:
                 self.output.append(stdout)
@@ -97,6 +100,7 @@ class ConsoleProcess:
                 stderr=subprocess.PIPE,
                 text=True,
                 encoding=self.config.encoding,
+                errors=getattr(self.config, 'encoding_errors', 'replace'),
                 bufsize=1
             )
 
@@ -141,7 +145,8 @@ class ConsoleProcess:
         try:
             output, _ = self.process.communicate(timeout=timeout)
             self.is_running = False
-            return output.strip()
+            # output pode ser None em alguns casos; normalizar antes de usar
+            return (output or "").strip()
         except subprocess.TimeoutExpired:
             self.logger.warning("Timeout ao ler saída do processo")
             return ""

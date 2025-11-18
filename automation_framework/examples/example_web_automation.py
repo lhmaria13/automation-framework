@@ -13,6 +13,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from automation_framework.web.driver_manager import DriverManager
 from automation_framework.web.page_object import BasePage
 from automation_framework.web.locators import Locator
+from selenium.webdriver.common.keys import Keys
 from automation_framework.core.config import ConfigManager
 from automation_framework.core.logger import Logger
 
@@ -28,7 +29,8 @@ class GoogleSearchPage(BasePage):
     def search(self, query: str) -> None:
         """Realiza busca"""
         self.type_text(self.SEARCH_INPUT, query)
-        self.click(self.SEARCH_BUTTON)
+        # pressionar Enter no campo de busca
+        self.find_element(self.SEARCH_INPUT).send_keys(Keys.ENTER)
 
     def get_results_count(self) -> int:
         """Retorna número de resultados"""

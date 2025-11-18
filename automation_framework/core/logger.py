@@ -5,6 +5,7 @@ Implementa logging estruturado com níveis configuráveis
 
 import logging
 import sys
+import io
 from pathlib import Path
 from datetime import datetime
 from logging.handlers import RotatingFileHandler
@@ -55,8 +56,14 @@ class Logger:
         if logger.handlers:
             return logger
 
-        # Handler para console
-        console_handler = logging.StreamHandler(sys.stdout)
+        # Handler para console: garantir que a saída use UTF-8 e não quebre
+        try:
+            # Re-encapsula stdout com encoding UTF-8 e errors='replace'
+            wrapped_stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace', line_buffering=True)
+            console_handler = logging.StreamHandler(wrapped_stdout)
+        except Exception:
+            # Fallback: usar stdout original
+            console_handler = logging.StreamHandler(sys.stdout)
         console_handler.setLevel(getattr(logging, level.upper()))
 
         # Handler para arquivo com rotação
@@ -64,10 +71,12 @@ class Logger:
         logs_dir.mkdir(exist_ok=True)
         log_file = logs_dir / f"{name.replace('.', '_')}.log"
 
+        # Handler para arquivo com rotação (usar UTF-8)
         file_handler = RotatingFileHandler(
             log_file,
             maxBytes=10 * 1024 * 1024,  # 10MB
-            backupCount=5
+            backupCount=5,
+            encoding='utf-8'
         )
         file_handler.setLevel(getattr(logging, level.upper()))
 

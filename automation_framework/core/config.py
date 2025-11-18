@@ -8,6 +8,8 @@ import os
 from pathlib import Path
 from typing import Any, Dict, Optional
 from dataclasses import dataclass, asdict
+import locale
+import os
 
 
 @dataclass
@@ -170,8 +172,20 @@ class ConfigManager:
         return DesktopConfig(**self._config.get('desktop', {}))
 
     def get_console_config(self) -> ConsoleConfig:
-        """Retorna objeto de configuração de console"""
-        return ConsoleConfig(**self._config.get('console', {}))
+        """Retorna objeto de configuração de console
+
+        Ajusta encoding padrão para o encoding do sistema em Windows
+        para evitar problemas de decodificação da saída do console.
+        """
+        console_cfg = dict(self._config.get('console', {}))
+        # Se estiver no Windows e encoding for o padrão 'utf-8', use o encoding preferencial do sistema
+        if os.name == 'nt':
+            # Para cmd.exe o encoding OEM comum é cp850 em sistemas PT-BR;
+            # usar cp850 para decodificar corretamente a saída do console.
+            if console_cfg.get('encoding', '') in (None, '', 'utf-8'):
+                console_cfg['encoding'] = 'cp850'
+
+        return ConsoleConfig(**console_cfg)
 
     def to_dict(self) -> Dict[str, Any]:
         """Retorna todas as configurações como dicionário"""

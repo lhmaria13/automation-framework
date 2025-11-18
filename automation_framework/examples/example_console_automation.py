@@ -2,6 +2,12 @@
 Exemplo 3: Automação Console e Comandos CLI
 Demonstra execução e interação com console
 """
+import sys
+from pathlib import Path
+
+# Garantir que a raiz do projeto esteja no sys.path para permitir execução
+# a partir da pasta `automation_framework/` ou de qualquer outra
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from automation_framework.console.console_manager import (
     ConsoleProcess,
